@@ -71,6 +71,50 @@ class Betfair:
                         print('home odds:',home_odds)
                         print('away odds:',away_odds)
                         print('draw odds:',draw_odds)
+                   
+                        
+      # based on a competition id, get the individual match ids
+      # returns a list of match ids for a competition as [123, 124, 125...]
+    def get_match_event_ids(self,competition_id):
+        euro_matches_req='{"jsonrpc": "2.0", "method": "SportsAPING/v1.0/listEvents", "params": {"filter":{ "competitionIds" : ["'+competition_id+'"]  }}}'
+        euro_matches=json.loads(self.callAping(euro_matches_req))
+        #print json_matches
+        match_ids=[]
+        match_names=[]
+        match_dates=[]
+        matches=euro_matches['result'] 
+        for m in matches:
+            # get group stage games
+            if ('Group' not in m['event']['name'] and 'Euro' not in m['event']['name']):
+                match_ids.append(m['event']['id'])
+                match_names.append(m['event']['name'])
+                match_dates.append(m['event']['openDate'])
+        #print(match_ids)
+        #print(match_names)
+        #print(match_dates)
+        
+        return match_ids,match_names,match_dates
+        
+      # takes an event id, finds the match odds market, then fetches the best odds available
+      # returns the match odds in a list as [home, away, draw]
+    def get_match_odds_market(self, event_id):
+        odds=[]
+        getMarketId_req='{"jsonrpc": "2.0","method": "SportsAPING/v1.0/listMarketCatalogue","params": {"filter": {"eventIds":["'+event_id+'"],"marketName":["Match Odds"]},"maxResults": "500","priceProjection" : { "priceData": ["EX_BEST_OFFERS"]}}}'
+        market_ids=json.loads(self.callAping(getMarketId_req))
+        markets=market_ids['result']
+        for m in markets:
+            if 'Match Odds' in m['marketName']:
+                # get the market id for match odds
+                #print 'market ID: ',m['marketId']
+                get_match_odds_req='{"jsonrpc": "2.0", "method": "SportsAPING/v1.0/listMarketBook", "params": {"marketIds":["'+m['marketId']+'"],"priceProjection":{"priceData":["EX_BEST_OFFERS"],"virtualise":"true"}}, "id": 1}'
+                match_odds=json.loads(self.callAping(get_match_odds_req))
+                odds.append(match_odds['result'][0]['runners'][0]['ex']['availableToBack'][0]['price'])
+                odds.append(match_odds['result'][0]['runners'][1]['ex']['availableToBack'][0]['price'])
+                odds.append(match_odds['result'][0]['runners'][2]['ex']['availableToBack'][0]['price'])
+                break
+        return odds
+            
+        
 
 
     
