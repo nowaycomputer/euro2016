@@ -43,35 +43,7 @@ class Betfair:
             exit()
         except urllib2.HTTPError:
             print 'Oops not a valid operation from the service ' + str(url)
-            exit()
-    
-    def getEuro2016Odds(self):
-        # 4527196 is hardcoded as the competition id
-        euro_matches_req='{"jsonrpc": "2.0", "method": "SportsAPING/v1.0/listEvents", "params": {"filter":{ "competitionIds" : ["4527196"]  }}}'
-        euro_matches=json.loads(self.callAping(euro_matches_req))
-        #print json_matches
-        matches=euro_matches['result'] 
-        for m in matches:
-            # get group stage games
-            if ('Group' not in m['event']['name'] and 'Euro' not in m['event']['name']):
-                print m['event']['id'], m['event']['name']
-                # get the market ID for the game
-                getMarketId_req='{"jsonrpc": "2.0","method": "SportsAPING/v1.0/listMarketCatalogue","params": {"filter": {"eventIds":["'+m['event']['id']+'"],"marketName":["Match Odds"]},"maxResults": "500","priceProjection" : { "priceData": ["EX_BEST_OFFERS"]}}}'
-                market_ids=json.loads(self.callAping(getMarketId_req))
-                markets=market_ids['result']
-                for m in markets:
-                    if 'Match Odds' in m['marketName']:
-                        # get the market id for match odds
-                        #print 'market ID: ',m['marketId']
-                        get_match_odds_req='{"jsonrpc": "2.0", "method": "SportsAPING/v1.0/listMarketBook", "params": {"marketIds":["'+m['marketId']+'"],"priceProjection":{"priceData":["EX_BEST_OFFERS"],"virtualise":"true"}}, "id": 1}'
-                        match_odds=json.loads(self.callAping(get_match_odds_req))
-                        home_odds=match_odds['result'][0]['runners'][0]['ex']['availableToBack'][0]['price']
-                        away_odds=match_odds['result'][0]['runners'][1]['ex']['availableToBack'][0]['price']
-                        draw_odds=match_odds['result'][0]['runners'][2]['ex']['availableToBack'][0]['price']
-                        print('home odds:',home_odds)
-                        print('away odds:',away_odds)
-                        print('draw odds:',draw_odds)
-                   
+            exit() 
                         
       # based on a competition id, get the individual match ids
       # returns a list of match ids for a competition as [123, 124, 125...]
