@@ -6,15 +6,6 @@
 
 <h2>Euro 2016 Odds Analysis</h2>
 	
-	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<ins class="adsbygoogle"
-     style="display:inline-block;width:300px;height:600px;float: left"
-     data-ad-client="ca-pub-3631451005513751"
-     data-ad-slot="7134295675"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-	
 <?php
 $servername = "localhost";
 $username = "euro";
@@ -89,10 +80,6 @@ if ($result_odds->num_rows > 0) {
         <div class='cell'>".$row["event_date"]." </div>
 				<div class='cell'>".$row["home_team"]." v ".$row["away_team"]." </div>
           <div class='cell'>".round($row["odds_home_prob"]*100,1)."%</div>";
-				
-		#			<div class='cell style='".cell_style($row['odds_home_prob'],$row['calc_home_prob'])."'><b>".round($row["calc_home_prob"]*100,2)."%</b></div>
-	#				<div class='cell'><i>".$row["timestamp"]." </i></td><td>"."<a href='https://www.betfair.com/exchange/football/event?id=".$row["event_id"]."'>bet</a></div>
-  #          </div>";
 					
 			# HOME
 			if (($row["calc_home_prob"]-$row["odds_home_prob"])>0.05){
@@ -126,27 +113,6 @@ if ($result_odds->num_rows > 0) {
 			
 			# end of row div
 			echo "</div>";
-			
-			
-	#		echo "<div class='cell'>".round($row["odds_draw_prob"]*100,1)."%</div>";	
-	#		if (($row["calc_draw_prob"]-$row["odds_draw_prob"])>0.05)
-	#					echo "<div class='cell' style='background-color:#33cc33'><b>".round($row["calc_draw_prob"]*100,2)."%</b></div>";
-	#		else echo "<div class='cell><b>".round($row["calc_draw_prob"]*100,2)."%</b></div>";
-	#				
-	#		echo "<div class='cell'>".round($row["odds_away_prob"]*100,1)."%</div>";
-	#		if (($row["calc_away_prob"]-$row["odds_away_prob"])>0.05)
-	#				  echo "<div class='cell' style='background-color:#33cc33'><b>".round($row["calc_away_prob"]*100,2)."%</b></div>";
-	#		else echo "<div class='cell><b>".round($row["calc_away_prob"]*100,2)."%</b></div>";			
-			
-					#echo "<div class='cell'>".round($row["odds_draw_prob"]*100,1)."%</div>
-					#	<div class='cell'><b>".round($row["calc_draw_prob"]*100,2)."%</b></div>
-					#	<div class='cell'>".round($row["odds_away_prob"]*100,1)."%</div>
-					#	<div class='cell'><b>".round($row["calc_away_prob"]*100,2)."%</b></div>
-                 
-     #  echo "<div class='cell'><i>".$row["timestamp"]." </i></td><td>"."<a href='https://www.betfair.com/exchange/football/event?id=".$row["event_id"]."'>bet</a></div>
-      #      </div>";
-      # overround
-      #(1/$row["away_odds"]+1/$row["home_odds"]+1/$row["draw_odds"])
     }
      echo "</div>";
 } else {
