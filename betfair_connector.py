@@ -31,7 +31,7 @@ class Betfair:
         else:
             print "Request failed."
 
-    # slightly re-written betfair api demo functions
+    # slightly re-written betfair api demo call api function
     def callAping(self,jsonrpc_req):
         try:
             req = urllib2.Request(self.api_url, jsonrpc_req, self.api_headers)
@@ -85,17 +85,5 @@ class Betfair:
                     break
         except Warning as warn:
             print warn
-        return odds
-
-    # from here down just messing about
-#client=Betfair(sys.argv[1],sys.argv[2])
-#euro_matches_req='{"jsonrpc": "2.0", "method": "SportsAPING/v1.0/listEvents", "params": {"filter":{ "competitionIds" : ["4527196"]  }}}'        
-#print(json.loads(client.callAping(euro_matches_req)))
-
-    ## GET Odds                                                                                                                                                                                                                               
-    #getMarketId_req='{"jsonrpc": "2.0","method": "SportsAPING/v1.0/listMarketCatalogue","params": {"filter": {"eventTypeIds":["1"],"marketName":["Match Odds"]},"maxResults": "500","marketProjection": ["COMPETITION","EVENT","EVENT_TYPE","RUNNER_DESCRIPTION"]},"id": 1}'                                                                                                                                                                                                            
-    #marketIdResponse = requests.post(url, data=getMarketId_req, headers=headers)    
-    #print(marketIdResponse)
-    #marketData=json.loads(marketIdResponse.text)                                                                                                                                                                                              
-    #resultData= marketData['result']                                                                                                                                                                                                          
+        return odds                                                                                                                                                                                                        
                                     

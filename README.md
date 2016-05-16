@@ -1,8 +1,9 @@
-# euro2016
+# Euro 2016 Odds Analysis
 
-attempt to predict results and outcomes of euro2016
+This project looks at the best exchange odds available on betfair for the Euro 2016 matches and compares them to the ELO-based method of estimating outcome probability
 
-Idea: use current ELO ratings as a base and update the scores based on:
-    - Basic sentiment analysis of news stories
-    - Changes in bookies odds
+The scraping/analysis is all done in python and mysql with a basic interface in php
+
+Future plans may include some sentiment analysis of sports news websites
+
     

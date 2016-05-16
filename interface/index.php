@@ -5,7 +5,7 @@
 <?php include_once("tracking.php") ?>
 
 <h2>Euro 2016 Odds Analysis</h2>
-	
+		
 <?php
 $servername = "localhost";
 $username = "euro";
@@ -20,16 +20,14 @@ if ($conn->connect_error) {
 } 
 ?>
 <div style='background-color:white;width:1000px; margin:0 auto;padding:10px'>
-	<br/>
 	<div align="center"
 		<table style='background-color:#33cc33;border:1px solid black;'>
 		<tr> <td><b>Cells in green</b></td> </tr>
 		</table>
 	</div>
-	 indicate odds which <i>might</i> be worth betting against, according an analysis of the <a href="http://www.eloratings.net/">ELO ratings</a> of the teams.<br/><br/> 
-The latest odds from the betfair exchange (left column, 'Bet %') are compared with the model estimate (right column, 'OA %') of each outcome. The betting probabilities are normalised for the <a href="https://en.wikipedia.org/wiki/Vigorish">overround</a>.
+	 indicate markets on betfair which <i>might</i> be worth betting against, according to an analysis of the <a href="http://www.eloratings.net/">ELO ratings</a> of the teams. Currently, differences of more than 10% are highlighted<br/><br/> 
+The implied probabilities from the latest odds from the betfair exchange (left column, 'Bet %') are compared with the model estimate (right column, 'OA %') for each outcome. The betting probabilities are normalised for the <a href="https://en.wikipedia.org/wiki/Mathematics_of_bookmaking#Making_a_.27book.27_.28and_the_notion_of_overround.29">overround</a>.
 <br/><br/>Draw probabilities have been estimated from a comparison of draw frequency at major tournaments with the rating differential.
-	<br/>
 
 	</div>
 	<?php	
@@ -37,7 +35,6 @@ $sql_odds = "SELECT * FROM euro_2016_analysis where timestamp in ( select max(ti
 $result_odds = $conn->query($sql_odds);
 
 if ($result_odds->num_rows > 0) {
-    // output data of each row
     ?>
 <div class="wrapper">
     <div class="table">
@@ -67,22 +64,15 @@ if ($result_odds->num_rows > 0) {
      </div>
         <?php
 	
-    function cell_style($odds,$calc) {
-        if (($odds-$calc)>0.05) 
-					return 'background-color:#33cc33';
-        else return 'background-color:#f6f6f6';
-    }
-	
     while($row = $result_odds->fetch_assoc()) {
-		#	if ($row["age"]<19)
-   #echo '<tr style="background-color:#ffff99">';
+		
         echo "<div class='row'>
         <div class='cell'>".$row["event_date"]." </div>
 				<div class='cell'>".$row["home_team"]." v ".$row["away_team"]." </div>
           <div class='cell'>".round($row["odds_home_prob"]*100,1)."%</div>";
 					
 			# HOME
-			if (($row["calc_home_prob"]-$row["odds_home_prob"])>0.05){
+			if (sqrt(($row["calc_home_prob"]-$row["odds_home_prob"])*($row["calc_home_prob"]-$row["odds_home_prob"]))>0.1){
 					echo "<div class='cell' style='background-color:#33cc33;border:1px solid black;'><b>".round($row["calc_home_prob"]*100,2)."%</b></div>";
 			}
 			else{ 
@@ -92,7 +82,7 @@ if ($result_odds->num_rows > 0) {
 			# DRAW
 			echo "<div class='cell'>".round($row["odds_draw_prob"]*100,1)."%</div>";	
 			
-			if (($row["calc_draw_prob"]-$row["odds_draw_prob"])>0.05){
+			if (sqrt(($row["calc_draw_prob"]-$row["odds_draw_prob"])*($row["calc_draw_prob"]-$row["odds_draw_prob"]))>0.1){
 						echo "<div class='cell' style='background-color:#33cc33;border:1px solid black;'><b>".round($row["calc_draw_prob"]*100,2)."%</b></div>";
 			}
 			else{ 
@@ -102,7 +92,7 @@ if ($result_odds->num_rows > 0) {
 			#AWAY
 			echo "<div class='cell'>".round($row["odds_away_prob"]*100,1)."%</div>";
 			
-			if (($row["calc_away_prob"]-$row["odds_away_prob"])>0.05){
+			if (sqrt(($row["calc_away_prob"]-$row["odds_away_prob"])*($row["calc_away_prob"]-$row["odds_away_prob"]))>0.1){
 					  echo "<div class='cell' style='background-color:#33cc33;border:1px solid black;'><b>".round($row["calc_away_prob"]*100,2)."%</b></div>";
 			}
 			else{
@@ -114,6 +104,7 @@ if ($result_odds->num_rows > 0) {
 			# end of row div
 			echo "</div>";
     }
+	# end of table div
      echo "</div>";
 } else {
     echo "0 results";

@@ -4,6 +4,8 @@ class Analysis:
     def __init__(self):
         pass
     
+    # calculates the overround for a given set of odds
+    # returns a set of odds normalised for the overround
     def get_normalised_overround_prob(self,odds):
         cum_prob=0
         for d in odds:
