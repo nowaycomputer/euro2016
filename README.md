@@ -6,4 +6,6 @@ The scraping/analysis is all done in python and mysql with a basic interface in 
 
 Future plans may include some sentiment analysis of sports news websites
 
+Demo running (as of writing) <a href='http://nowaycomputer.com/euro2016'>here</a>
+
     
