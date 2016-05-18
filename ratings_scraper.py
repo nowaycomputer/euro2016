@@ -11,7 +11,7 @@ class ELO_Scraper:
     def get_all_ratings(self):
         req = urllib2.Request(self.elo_url,headers=self.header)
         page = urllib2.urlopen(req)
-        soup = BeautifulSoup(page)
+        soup = BeautifulSoup(page,"html5lib")
         
         # set the pattern for the table rows that contain ratings
         # there are other useful fields in this table for later use

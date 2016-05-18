@@ -20,6 +20,9 @@ international_ratings=sc.get_all_ratings()
 #setup the analysis module 
 analysis=an.Analysis()
 
+#define the maximum adjustment we'll make to the elo scores
+max_elo_change=10.
+
 # go forever
 while True:
     try:
@@ -38,15 +41,30 @@ while True:
                     teams=name.split(' v ')
                     home_team=teams[0]
                     away_team=teams[1]
-                    
-                    # catch differences between country names in ELO ratings and Betfair
+                    home_elo_adjust=0.
+                    away_elo_adjust=0.
+                    # 
+                    # Sentiment analysis commented out for now with google 503'ing the requests :-(
+                    #
+                    #if ('Rep' in home_team):
+                   #     home_team_elo =float(international_ratings.get('Ireland'))+float(analysis.get_news_sentiment('Ireland'))*max_elo_change
+                   #     home_elo_adjust=float(analysis.get_news_sentiment('Ireland'))*max_elo_change
+                   # elif ('Rep' in away_team):
+                   #     away_team_elo =float(international_ratings.get('Ireland'))+float(analysis.get_news_sentiment('Ireland'))*max_elo_change
+                   #     away_elo_adjust=float(analysis.get_news_sentiment('Ireland'))*max_elo_change
+                   # else:
+                   #   home_team_elo=float(international_ratings.get(home_team))+float(analysis.get_news_sentiment(home_team))*max_elo_change
+                   #   away_team_elo=float(international_ratings.get(away_team))+float(analysis.get_news_sentiment(away_team))*max_elo_change
+                   #   home_elo_adjust=float(analysis.get_news_sentiment(home_team))*max_elo_change
+                   #   away_elo_adjust=float(analysis.get_news_sentiment(away_team))*max_elo_change
+                        
                     if ('Rep' in home_team):
-                        home_team_elo =float(international_ratings.get('Ireland'))+float(analysis.get_news_sentiment_elo_adjustment('Ireland'))
+                        home_team_elo =float(international_ratings.get('Ireland')) 
                     elif ('Rep' in away_team):
-                        away_team_elo =float(international_ratings.get('Ireland'))+float(analysis.get_news_sentiment_elo_adjustment('Ireland'))
+                        away_team_elo =float(international_ratings.get('Ireland'))
                     else:
-                        home_team_elo=float(international_ratings.get(home_team))+float(analysis.get_news_sentiment_elo_adjustment(home_team))
-                        away_team_elo=float(international_ratings.get(away_team))+float(analysis.get_news_sentiment_elo_adjustment(away_team))
+                      home_team_elo=float(international_ratings.get(home_team))
+                      away_team_elo=float(international_ratings.get(away_team))
                     # order matters when calculating the ELO difference and probabilities
                     if (home_team_elo>away_team_elo):
                         probs = analysis.get_probabilities_from_elo(home_team_elo,away_team_elo)
@@ -59,8 +77,8 @@ while True:
                         away_team_prob=probs[0]
                         draw_prob=probs[2]
                         
-                    print home_team, home_team_elo, home_team_prob
-                    print away_team, away_team_elo, away_team_prob
+                    print home_team, 'ELO ', home_team_elo, 'Win Prob: ', home_team_prob
+                    print away_team, 'ELO ', away_team_elo, 'Win Prob: ', away_team_prob
                     print 'Draw: ', draw_prob
                     
                     # store the values for the old structure/interface

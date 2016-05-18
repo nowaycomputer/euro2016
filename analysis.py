@@ -45,20 +45,18 @@ class Analysis:
         return -0.3556*(prob_A-prob_B)+0.3556
     
     # takes a team names and searches for recent news stories (last 7 days)
-    # based on the approximate sentiment, it returns an ELO adjustment
-    # a maximum of 10 point elo adjustment is pre-set as a typical maximum exchanged
-    # between higher rated teams
-    def get_news_sentiment_elo_adjustment(self,team):
-        max_elo_change=10.
+    # based on the approximate sentiment, it returns an adjustment factor of -1 to +1
+    def get_news_sentiment(self,team):
+        print '------------------------------'
+        print 'Scanning sentiment for: ',team
+        print '------------------------------'
         story_limit=5 
         neg=0
         pos=0
         visible_text=''
-        #negative phrases=['unfit','will not be fit','not fit','injured','injuries','depressed','disappointed','controversy','scandal','home','conceded']
-        positive_phrases=['fully fit','strong','scored']
-        negative_phrases=['unfit','injured']
         base_url='https://www.google.co.uk/search?hl=en&gl=uk&tbm=nws&authuser=0&q=football+european+championships'+team.replace(' ','%20')
         req = urllib2.Request(base_url,headers = {'User-Agent': 'Mozilla/5.0'} )
+        print base_url
         page = urllib2.urlopen(req)
         soup = BeautifulSoup(page)
         # remove scripts and tags
@@ -66,7 +64,6 @@ class Analysis:
                 script.extract()    # rip it out
         # find the links
         sentence_count=0
-        score=0
         story_count=0
         for a in soup.findAll('a'):
             if story_count<story_limit:
@@ -97,17 +94,6 @@ class Analysis:
                     except urllib2.HTTPError:
                         print 'failed on url: ',a.attrs['href']
                     story_count=story_count+1 
-        # calculate an average sentiment based on all of the stories
-        # return an elo_adjustment based on the max elo change and the sentiment
-        norm_sentiment_score=(pos-neg)/len(sentences)
-        return norm_sentiment_score*max_elo_change
-
-
-        norm_sentiment_score=(pos-neg)/len(visible_text)
-        
-        # do the scraping
-        # do the sentiment analysis
-        # do the normalising
-        
-        return norm_sentiment_score*max_elo_change
+        # return the average net polarity/sentiment
+        return (pos-neg)/sentence_count
         
